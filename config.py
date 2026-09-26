@@ -6,13 +6,13 @@
 WEIGHTS = {
     "area": 0.15,           # 种植确权面积
     "years": 0.10,          # 种植年限
-    "specialty": 0.15,      # 是否种植精品品种
+    "specialty": 0.15,      # 精品品种
     "yield_amount": 0.10,   # 年产量
-    "coop": 0.10,           # 合作社身份
+    "coop": 0.05,           # 合作社身份
     "performance": 0.15,    # 历史交易履约记录
     "insurance": 0.10,      # 保险参保情况
     "village_rating": 0.10, # 村集体信用评级
-    "default_flag": 0.05,   # 历史逾期标记
+    "e_pay_activity": 0.10, # 咖e付流水活跃度
 }
 
 # 村集体信用评级映射（A=1.0满分，D=0.2最低）
@@ -26,25 +26,29 @@ GRADE_THRESHOLDS = {
     "D": 0,
 }
 
-# 各等级对应的输出建议
+# 各等级对应的输出建议（首期授信 + 提额后区间 + 利率）
 GRADE_OUTPUT = {
     "A": {
-        "range": "20-30万元",
-        "rate": "基准利率下浮15%",
+        "range": "10-15万元",
+        "max_range": "20-30万元",
+        "rate": "LPR+50BP（约3.5%）",
         "advice": "优质客户，建议优先授信",
     },
     "B": {
-        "range": "10-20万元",
-        "rate": "基准利率下浮10%",
+        "range": "5-10万元",
+        "max_range": "10-20万元",
+        "rate": "LPR+80BP",
         "advice": "良好客户，建议正常授信",
     },
     "C": {
-        "range": "5-10万元",
-        "rate": "基准利率",
+        "range": "1-5万元",
+        "max_range": "5-10万元",
+        "rate": "LPR+120BP",
         "advice": "一般客户，建议审慎授信",
     },
     "D": {
         "range": "建议线下人工复核",
+        "max_range": "—",
         "rate": "暂不建议授信",
         "advice": "建议风控人员进一步核实经营情况",
     },
@@ -60,6 +64,14 @@ INDICATOR_NAMES = {
     "performance": "履约记录",
     "insurance": "保险参保",
     "village_rating": "村集体评级",
-    "default_flag": "历史逾期",
+    "e_pay_activity": "咖e付流水活跃度",
 }
 
+# 证明材料清单
+MATERIALS = [
+    {"name": "土地确权证明", "source": "政府确权系统", "auto": "是"},
+    {"name": "种植面积核验材料", "source": "卫星遥感/无人机", "auto": "是"},
+    {"name": "历史交易流水", "source": "咖e付系统", "auto": "是"},
+    {"name": "保险参保证明", "source": "保险公司系统", "auto": "是"},
+    {"name": "村集体信用评级证明", "source": "村委会", "auto": "否"},
+]
